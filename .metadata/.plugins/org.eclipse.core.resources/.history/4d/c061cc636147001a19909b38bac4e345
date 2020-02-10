@@ -1,0 +1,23 @@
+package Pages;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+
+import Teste.TesteCucumber;
+import Utils.Utils;
+
+public class Busca {
+	public WebDriver driver;
+
+	public Busca() {
+	}
+
+	public String validarResultadoBusca() {
+		this.driver = TesteCucumber.getDriver();
+		Utils.highLight(driver.findElement(By.tagName("h2")));
+		String msg = driver.findElement(By.tagName("h2")).getText();
+		String[] resultado = msg.split(": ");
+		Utils.logPrint("Validar resultado = " + resultado[1]);
+		return resultado[1];
+	}
+}

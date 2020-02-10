@@ -1,0 +1,76 @@
+package Pages;
+
+import java.text.DecimalFormat;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
+import Teste.TesteCucumber;
+import Utils.Utils;
+
+public class Formulario {
+	public WebDriver driver;
+	
+	public static String empresa;
+	public static String getEmpresa() {
+		empresa = Fap.getEmpresa();
+		return empresa;
+	}
+	static DecimalFormat df = new DecimalFormat("0.00");
+	public static Float maximo;
+	public static String getMaximo() {
+		return df.format(maximo);
+	}
+	public static float minimo;
+	public static String getMinimo() {
+		return df.format(minimo);
+	}
+	public static float economia;
+	public static String getEconomia() {
+		return df.format(economia);
+	}
+	private float salario;
+	private float rat;
+	private int fap;
+
+	public Formulario() {
+	}
+	private void inicial() {
+		this.driver = TesteCucumber.getDriver();
+		salario = Fap.getSalario();
+		rat = Fap.getRat();
+		fap = Fap.getFap();
+		Formulario.maximo = (salario*(rat*fap))/100;
+		Formulario.minimo = (salario*(rat/2))/100;
+		Formulario.economia = maximo-minimo;
+	}
+
+	public String validarEmpresa() {
+		inicial();
+		WebElement campoEmpresa = driver.findElement(By.xpath("//*[@id='page']/section/div/article[1]/table/tbody/tr/td[1]"));
+		Utils.log(campoEmpresa, "Validar nome da empresa");
+		return campoEmpresa.getText();
+	}
+
+	public String validarMaximo() {
+		WebElement campoMaximo = driver.findElement(By.xpath("//*[@id=\"page\"]/section/div/article[4]/table/tbody/tr/td[1]"));		
+		Utils.log(campoMaximo,"Validar recolhimento maximo");
+		String[] valorCampo = campoMaximo.getText().split("R$ ");
+		return valorCampo[1].replace(".", ",");
+	}
+
+	public String validarMinimo() {
+		WebElement campoMinimo = driver.findElement(By.xpath("//*[@id=\"page\"]/section/div/article[4]/table/tbody/tr/td[2]"));
+		Utils.log(campoMinimo, "Validar recolhimento minimo");
+		String[] valorCampo = campoMinimo.getText().split("R$ ");
+		return valorCampo.replace(".", ",");
+	}
+
+	public String validarEconomia() {
+		WebElement campoEconomia = driver.findElement(By.className("economia"));
+		Utils.log(campoEconomia,"Validar passivel de economia");
+		String[] valorCampo = campoEconomia.getText().split("R$ ");
+		return valorCampo.replace(".", ",");
+	}
+}

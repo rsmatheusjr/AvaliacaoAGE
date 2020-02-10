@@ -1,0 +1,67 @@
+package Pages;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import Teste.TesteCucumber;
+import Utils.Utils;
+public class Fap {
+	public WebDriver driver;
+	public static String empresa;
+	public static String getEmpresa() {
+		return empresa;
+	}
+	public static int rat;
+	public static int getRat() {
+		return rat;
+	}
+	public static int fap;
+	public static int getFap() {
+		return fap;
+	}
+	public static String salario;
+	public static Float getSalario() {
+		return salario;
+	}
+	
+	public Fap() {
+	}
+	public String validarTelaFap() {
+		this.driver = TesteCucumber.getDriver();
+		WebElement validar = driver.findElement(By.tagName("h1"));
+		Utils.log(validar,"Acessar pagina do FAP");
+		return validar.getText();
+	}
+	public void preencherEmpresa(String empresa) {
+		Fap.empresa = empresa;
+		WebElement campoEmpresa = driver.findElement(By.name("nomeEmpresa"));
+		campoEmpresa.sendKeys(empresa);
+		Utils.log(campoEmpresa,"Preencher campo empresa com = " + empresa);
+	}
+	public void preencherFap(int fap) {
+		Fap.fap = fap;
+		WebElement campoFap = driver.findElement(By.name("fap"));
+		campoFap.sendKeys(Integer.toString(fap));
+		Utils.log(campoFap,"Preencher campo FAP com = " + fap);
+	}
+
+	public void preencherRat(int rat) {
+		Fap.rat = rat;
+		WebElement campoRat = driver.findElement(By.className("selectric"));
+		campoRat.click();
+		driver.findElement(By.cssSelector("li[data-index='" + Integer.toString(rat) + "']")).click();
+		Utils.log(campoRat,"Selecionar RAT = " + rat);
+	}
+
+	public void preencherSalario(String salario) {
+		Fap.salario = salario;
+		WebElement campoSalario = driver.findElement(By.name("projecao"));
+		campoSalario.sendKeys(Float.toString(salario));
+		Utils.log(campoSalario,"Preencher campo de projecao de massa salarial com = " + salario);
+	}
+
+	public void estimarFormulario() {
+		WebElement botao = driver.findElement(By.className("wpcf7-submit"));
+		Utils.log(botao,"Clicar em estimar");
+		botao.click();
+	}
+}

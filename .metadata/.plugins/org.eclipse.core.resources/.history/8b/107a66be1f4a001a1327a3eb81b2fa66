@@ -1,0 +1,81 @@
+package Pages;
+import java.text.DecimalFormat;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
+import com.aventstack.extentreports.Status;
+
+import Teste.TesteCucumber;
+import Utils.Utils;
+public class Formulario {
+	//Inicialização
+	public WebDriver driver;
+	public static String empresa;
+	public static String getEmpresa() {
+		empresa = Fap.getEmpresa();
+		return empresa;
+	}
+	static DecimalFormat df = new DecimalFormat("0.00");
+	public static Float maximo;
+	public static String getMaximo() {
+		return df.format(maximo);
+	}
+	public static float minimo;
+	public static String getMinimo() {
+		return df.format(minimo);
+	}
+	public static float economia;
+	public static String getEconomia() {
+		return df.format(economia);
+	}
+	private float salario;
+	private float rat;
+	private int fap;
+	public Formulario() {
+	}
+	//Realizar calculos referentes aos valores dos campos maximo, minimo e economia
+	private void inicial() {
+		this.driver = TesteCucumber.getDriver();
+		salario = Fap.getSalario();
+		rat = Fap.getRat();
+		fap = Fap.getFap();
+		Formulario.maximo = (salario*(rat*fap))/100;
+		Formulario.minimo = (salario*(rat/2))/100;
+		Formulario.economia = maximo-minimo;
+	}
+	//Validar o campo com nome da empresa
+	public String validarEmpresa() {
+		inicial();
+		WebElement campoEmpresa = driver.findElement(By.xpath("//*[@id='page']/section/div/article[1]/table/tbody/tr/td[1]"));
+		if(campoEmpresa.getText() == Formulario.getEmpresa()) {
+			Utils.log(Status.PASS, campoEmpresa, "Validar nome da empresa");			
+		}else {
+			Utils.log(Status.ERROR, campoEmpresa, "Validar nome da empresa");
+		}
+		return campoEmpresa.getText();
+	}
+	//Validar o campo com valor maximo
+	public String validarMaximo() {
+		WebElement campoMaximo = driver.findElement(By.xpath("//*[@id='page']/section/div/article[4]/table/tbody/tr/td[1]/span"));	
+		if( campoMaximo.getText() == Formulario.getMaximo()){
+			Utils.log(Status.PASS, campoMaximo,"Validar recolhimento maximo");
+		}else {
+			Utils.log(Status.ERROR, campoMaximo,"Validar recolhimento maximo");
+		}
+		
+		return campoMaximo.getText();
+	}
+	//Validar o campo com valor minimo
+	public String validarMinimo() {
+		WebElement campoMinimo = driver.findElement(By.xpath("//*[@id='page']/section/div/article[4]/table/tbody/tr/td[2]/span"));
+		Utils.log(campoMinimo, "Validar recolhimento minimo");
+		return campoMinimo.getText();
+	}
+	//Validar o campo com valor da economia
+	public String validarEconomia() {
+		WebElement campoEconomia = driver.findElement(By.className("economia"));
+		Utils.log(campoEconomia,"Validar passivel de economia");
+		return campoEconomia.getText();
+	}
+}

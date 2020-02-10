@@ -1,0 +1,55 @@
+package Pages;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
+import com.aventstack.extentreports.Status;
+
+import Teste.TesteCucumber;
+import Utils.Utils;
+public class Blog {
+	//Inicialização
+	public WebDriver driver;
+	public static String dadoBusca;
+	public Blog() {
+	}
+	//Acessa o site apos o borwser estar iniciado
+	public void acessarSite() {
+		logar();
+		System.out.println();
+		System.out.println();
+		if ( driver.findElement(By.tagName("h1")).getText().trim() == ("BUSCA BLOG").trim()) {
+			Utils.log(Status.PASS,driver.findElement(By.tagName("h1")),"Acessar site de busca");
+		}else if(!(driver.findElement(By.tagName("h1")).getText() == "BUSCA BLOG ")){
+			Utils.log(Status.ERROR,driver.findElement(By.tagName("h1")),"Erro ao acessar site de busca");
+		}
+	}
+	//Valida que o site esta correto
+	public String validarTelaBusca() {
+		return driver.findElement(By.tagName("h1")).getText();
+	}
+	//Busca a palavra no site
+	public void realizarBusca(String palavra) {
+		Blog.dadoBusca = palavra;
+		WebElement campoBusca = driver.findElement(By.name("s"));
+		campoBusca.sendKeys(palavra);
+		if(campoBusca.getText().trim() == palavra.trim()) {
+			Utils.log(Status.PASS,campoBusca,"Buscar por = " + palavra);
+		}else if(!(campoBusca.getText().trim() == palavra.trim())){
+			Utils.log(Status.ERROR,campoBusca,"Erro ao preencher campo busca");
+		}
+		driver.findElement(By.className("lupa-form")).click();
+	}
+	//Dentro do site, acessa a pagina do FAP
+	public void acessarFap() {
+		logar();
+		driver.findElement(By.className("mostra-submenu")).click();
+		driver.findElement(By.linkText("FAP")).click();
+	}
+	//Maximiza o browser e entra no site
+	private void logar() {
+		this.driver = TesteCucumber.getDriver();
+		driver.manage().window().maximize();
+		driver.get("https://ww2.soc.com.br/blog/");
+	}
+}
